@@ -2,31 +2,38 @@ import sys
 
 import pygame
 
+from settings import Settings
+from shooter import Shooter
 
 class SidewaysShooter:
 
     def __init__(self):
         """Initialize the game and create game resources."""
         pygame.init()
-
-        self.screen = pygame.display.set_mode((1800,800))
+        self.settings = Settings()
+        self.screen = pygame.display.set_mode((self.settings.screen_width,self.settings.screen_height))
         pygame.display.set_caption("Sideways Shooter")
 
-        # Set the background color
-        self.bg_color = (0,255,255)
-
+        self.shooter = Shooter(self)
+        
     def run_game(self):
         """Start the main game loop."""
         while True:
-            # WATCH FOR KEYBOARD AND MOUSE EVENTS.
+            self._check_events()
+            self._update_screen()
+
+    def _check_events(self):
+        """Respond to keypresses and mouse events."""
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
 
-            # Redraw the screen during each pass through the loop
-            self.screen.fill(self.bg_color)
+    def _update_screen():
+        """Update images on the csreen, and flip to the new screen."""
+        self.screen.fill(self.settings.bg_color)
+        self.shooter.blitme()
             
-            pygame.display.flip()
+        pygame.display.flip()
 
 if __name__ == '__main__':
         #Make a game instance, and run the game
