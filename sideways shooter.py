@@ -20,6 +20,7 @@ class SidewaysShooter:
         """Start the main game loop."""
         while True:
             self._check_events()
+            self.shooter.update()
             self._update_screen()
 
     def _check_events(self):
@@ -27,6 +28,18 @@ class SidewaysShooter:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_x:
+                    # Move the shooter to the right
+                    self.shooter.moving_right = True
+                elif event.key == pygame.K_c:
+                    self.shooter.moving_left = True
+            
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_x:
+                    self.shooter.moving_right = False
+                elif event.key == pygame.K_c:
+                    self.shooter.moving_left = False
 
     def _update_screen(self):
         """Update images on the csreen, and flip to the new screen."""

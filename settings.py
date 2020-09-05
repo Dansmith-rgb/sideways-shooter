@@ -7,3 +7,5 @@ class Settings:
         self.screen_width = 1800
         self.screen_height = 800
         self.bg_color = (0, 255, 255)
+        # Shooter settings
+        self.shooter_speed = 1.5
