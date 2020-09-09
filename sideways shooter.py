@@ -104,16 +104,25 @@ class SidewaysShooter:
         # Spacing between ball is equal to one balls width.
         ball = Ball(self)
         ball_width = ball.rect.height
+        ball_width, ball_height = ball.rect.size
         available_space_x = self.settings.screen_width
         number_balls_x = available_space_x // (6 * ball_width)
+ 
+        # Determine the number of rows of aliens that fit on the screen.
+        ship_height = self.shooter.rect.height
+        available_space_y = self.settings.screen_height
+        number_rows = available_space_y // (2 * ball_height)
         
-        # Create the first row of aliens.
-        for ball_number in range(number_balls_x):
-            # Create a ball and place it in the row.
-            ball = Ball(self)
-            ball.y = 3 * ball_width + (6 * ball_width * ball_number) 
-            ball.rect.y = ball.y
-            self.balls.add(ball)
+        # Create the first fleet of aliens.
+        for row_number in range(number_rows):
+            for ball_number in range(number_balls_x):
+                # Create a ball and place it in the row.
+                ball = Ball(self)
+                ball_width, ball_height = ball.rect.size
+                ball.y = 2 * ball_width + (5 * ball_width * ball_number) 
+                ball.rect.y = ball.y
+                ball.rect.x =  19 *  ball_width  + (2 * ball_width * row_number) 
+                self.balls.add(ball)
 
     def _create_fleet2(self):
         """Create the fleet of ball2s."""
@@ -121,16 +130,25 @@ class SidewaysShooter:
         # Spacing between each ball is equal to one ball width.
         ball2 = Ball2(self)
         ball_width2 = ball2.rect.height
+        ball_width2, ball_height2  = ball2.rect.size
         available_space_x2 = self.settings.screen_width
-        number_ball2s_x = available_space_x2 // (6 * ball_width2 )
+        number_ball2s_x = available_space_x2 // (6 * ball_width2)
 
-        # Create the first row of balls.
-        for ball2_number in range(number_ball2s_x):
-            # Create a ball and place it in the row.
-            ball2 = Ball2(self)
-            ball2.y =  6 * ball_width2 * ball2_number 
-            ball2.rect.y = ball2.y
-            self.ball2s.add(ball2)
+        # Determine the number of balls that fit on the screen
+        shooter_height = self.shooter.rect.height
+        available_space_y2 = self.settings.screen_width
+        number_rows2 = available_space_y2 // (2 * ball_height2)
+
+        # Create the first fleet of balls.
+        for row_number2 in range(number_rows2):
+            for ball2_number in range(number_ball2s_x):
+                # Create a ball and place it in the row.
+                ball2 = Ball2(self)
+                ball_width2, ball_height2 = ball2.rect.size
+                ball2.y =  5 * ball_width2 * ball2_number
+                ball2.rect.y = ball2.y
+                ball2.rect.x =  19 * ball_width2 + (2 * ball_width2 * row_number2)
+                self.ball2s.add(ball2)
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
