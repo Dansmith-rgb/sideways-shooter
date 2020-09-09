@@ -103,23 +103,34 @@ class SidewaysShooter:
         # Create a ball and find the number of balls in one row.
         # Spacing between ball is equal to one balls width.
         ball = Ball(self)
-        ball_width = ball.rect.width
-        available_space_x = self.settings.screen_width - (4 * ball_width)
-        number_balls_x = available_space_x // (4 * ball_width)
+        ball_width = ball.rect.height
+        available_space_x = self.settings.screen_width
+        number_balls_x = available_space_x // (6 * ball_width)
         
         # Create the first row of aliens.
         for ball_number in range(number_balls_x):
             # Create a ball and place it in the row.
             ball = Ball(self)
-            ball.y = ball_width + 2 * ball_width * ball_number * 3
+            ball.y = 3 * ball_width + (6 * ball_width * ball_number) 
             ball.rect.y = ball.y
             self.balls.add(ball)
 
     def _create_fleet2(self):
         """Create the fleet of ball2s."""
-        # Make a ball
+        # Create a yellow ball and find the number of balls in a row.
+        # Spacing between each ball is equal to one ball width.
         ball2 = Ball2(self)
-        self.ball2s.add(ball2)
+        ball_width2 = ball2.rect.height
+        available_space_x2 = self.settings.screen_width
+        number_ball2s_x = available_space_x2 // (6 * ball_width2 )
+
+        # Create the first row of balls.
+        for ball2_number in range(number_ball2s_x):
+            # Create a ball and place it in the row.
+            ball2 = Ball2(self)
+            ball2.y =  6 * ball_width2 * ball2_number 
+            ball2.rect.y = ball2.y
+            self.ball2s.add(ball2)
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""

@@ -10,10 +10,10 @@ class Ball2(Sprite):
         self.screen = ss_game.screen
 
         # Load the ball2 image and set its rect attribute
-        self.image = pygame.image.load('images/yalien.bmp')
+        self.image = pygame.image.load('images/ycircle.bmp')
         self.rect = self.image.get_rect()
 
         # Start each new ball2 near the top right of the screen.
-        self.rect.x = self.rect.width * 23.5
-        self.rect.y = self.rect.height * 3.5
+        self.rect.x = self.rect.width * 39.5
+        self.rect.y = self.rect.height
         self.x = float(self.rect.x)
