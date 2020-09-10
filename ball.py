@@ -8,6 +8,7 @@ class Ball(Sprite):
         """Initialize the alien and set its starting position."""
         super().__init__()
         self.screen = ss_game.screen
+        self.settings = ss_game.settings
 
         # Load the ball image and set its rect attribute.
         self.image = pygame.image.load('images/rbcircle.bmp')
@@ -19,3 +20,5 @@ class Ball(Sprite):
 
         # Store the ball's exact horizontal position
         self.x = float(self.rect.x)
+
+    

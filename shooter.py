@@ -19,6 +19,7 @@ class Shooter:
 
         # Store a decimal value for the shooters
         self.y = float(self.rect.y)
+        self.x = float(self.rect.x)
 
         # Movement flags
         self.moving_right = False
@@ -32,8 +33,13 @@ class Shooter:
         if self.moving_left and self.rect.top > 0:
             self.y -= self.settings.shooter_speed
 
+        
+        # Moving the shooter very slowly forward
+        """Move the shooter forward."""
+        self.x += self.settings.shooter_speed2
         # Update rect object from self.y
         self.rect.y = self.y
+        self.rect.x = self.x
 
     def blitme(self):
         """Draw the ship and its current location."""

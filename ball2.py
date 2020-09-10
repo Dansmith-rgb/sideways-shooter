@@ -8,6 +8,7 @@ class Ball2(Sprite):
         """Initialize the ball2 and set its starting position."""
         super().__init__()
         self.screen = ss_game.screen
+        self.settings = ss_game.settings
 
         # Load the ball2 image and set its rect attribute
         self.image = pygame.image.load('images/ycircle.bmp')
@@ -17,3 +18,5 @@ class Ball2(Sprite):
         self.rect.x = self.rect.width * 39.5
         self.rect.y = self.rect.height
         self.x = float(self.rect.x)
+
+        

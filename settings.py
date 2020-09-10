@@ -24,3 +24,9 @@ class Settings:
         self.bulletb_height = 3
         self.bulletb_color = (255, 255, 0)
         self.bulletbs_allowed = 4
+
+        # Ball speed
+        self.shooter_speed2 = 0.1
+
+        
+ 

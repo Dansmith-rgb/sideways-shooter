@@ -34,6 +34,7 @@ class SidewaysShooter:
             self._check_events()
             self.shooter.update()
             self._update_bullets()
+            self._update_shooter()
             self._update_screen()
 
     def _check_events(self):
@@ -98,6 +99,11 @@ class SidewaysShooter:
             if bulletb.rect.right >= self.settings.screen_width:
                 self.bulletbs.remove(bulletb)
 
+    def _update_shooter(self):
+        """Update the position of the shooter."""
+        self.shooter.update()
+
+    
     def _create_fleet(self):
         """Create the fleet of balls."""
         # Create a ball and find the number of balls in one row.
@@ -105,12 +111,12 @@ class SidewaysShooter:
         ball = Ball(self)
         ball_width = ball.rect.height
         ball_width, ball_height = ball.rect.size
-        available_space_x = self.settings.screen_width
+        available_space_x = self.settings.screen_width 
         number_balls_x = available_space_x // (6 * ball_width)
  
         # Determine the number of rows of aliens that fit on the screen.
         ship_height = self.shooter.rect.height
-        available_space_y = self.settings.screen_height
+        available_space_y = self.settings.screen_height 
         number_rows = available_space_y // (2 * ball_height)
         
         # Create the first fleet of aliens.
