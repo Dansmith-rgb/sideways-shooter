@@ -99,6 +99,10 @@ class SidewaysShooter:
             if bulletb.rect.right >= self.settings.screen_width:
                 self.bulletbs.remove(bulletb)
 
+        # Check for any bullets that have hit any balls
+        #  If so, get rid of the bullets and the ball
+        collisions = pygame.sprite.groupcollide(self.bullets, self.balls, True, True)
+        colllision2 = pygame.sprite.groupcollide(self.bulletbs, self.ball2s, True, True)
     def _update_shooter(self):
         """Update the position of the shooter."""
         self.shooter.update()
