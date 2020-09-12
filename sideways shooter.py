@@ -1,8 +1,11 @@
 import sys
+from time import sleep
 
 import pygame
 
 from settings import Settings
+from game_stats import GameStats
+from line import Line
 from shooter import Shooter
 from bullet import Bullet
 from bulletb import Bulletb
@@ -19,7 +22,10 @@ class SidewaysShooter:
         self.screen = pygame.display.set_mode((self.settings.screen_width,self.settings.screen_height))
         pygame.display.set_caption("Sideways Shooter")
 
+        # Create an instance to store game statistics.
+        self.stats = GameStats(self)
         self.shooter = Shooter(self)
+        self.lines = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.bulletbs = pygame.sprite.Group()
         self.balls = pygame.sprite.Group()
@@ -32,9 +38,11 @@ class SidewaysShooter:
         """Start the main game loop."""
         while True:
             self._check_events()
-            self.shooter.update()
-            self._update_bullets()
-            self._update_shooter()
+            if self.stats.game_active:
+                self._check_events()
+                self.shooter.update()
+                self._update_bullets()
+                self._update_shooter()
             self._update_screen()
 
     def _check_events(self):
@@ -62,8 +70,22 @@ class SidewaysShooter:
             self.shooter.moving_right = True
         elif event.key == pygame.K_c:
             self.shooter.moving_left = True
+        elif event.key == pygame.K_SPACE:
+            self._fire_line()
+        elif event.key == pygame.K_p:
+            self.balls.empty()
+            self.ball2s.empty()
+            self.bullets.empty()
+            self.bulletbs.empty()
+            self.lines.empty()
+            self.shooter3()
+            self._create_fleet()
+            self._create_fleet2()
         elif event.key == pygame.K_q:
             sys.exit()
+
+    def shooter3(self):
+        self.shooter = Shooter(self)
 
     def _check_keyup_events(self, event):
         """Respond to key releases."""
@@ -89,6 +111,7 @@ class SidewaysShooter:
         # Update bullet positions
         self.bullets.update()
         self.bulletbs.update()
+        self.lines.update()
 
         # Get rid of bullets that have disappeared.
         for bullet in self.bullets.copy():
@@ -99,15 +122,55 @@ class SidewaysShooter:
             if bulletb.rect.right >= self.settings.screen_width:
                 self.bulletbs.remove(bulletb)
 
+        self._check_bullet_ball_collisions()
+        
+    def _check_bullet_ball_collisions(self):
+        """Respond to bullet-ball collisions."""
+        # Remove any bullets and balls that have collided.
         # Check for any bullets that have hit any balls
         #  If so, get rid of the bullets and the ball
         collisions = pygame.sprite.groupcollide(self.bullets, self.balls, True, True)
         colllision2 = pygame.sprite.groupcollide(self.bulletbs, self.ball2s, True, True)
+        collisions3 = pygame.sprite.groupcollide(self.lines, self.balls, True, True)
+        collisions4 = pygame.sprite.groupcollide(self.lines, self.ball2s, True, True)
+
+        if collisions3 or collisions4 == True:
+            self._shooter_hit()
+            
     def _update_shooter(self):
         """Update the position of the shooter."""
         self.shooter.update()
 
+        # Look for ball-shooter collisions.
+        if pygame.sprite.spritecollideany(self.shooter, self.balls):
+            self._shooter_hit()
+
+        if pygame.sprite.spritecollideany(self.shooter, self.ball2s):
+            self._shooter_hit()
+
     
+    def _shooter_hit(self):
+        """Respond to the shooter being hit."""
+        if self.stats.shooters_left > 0:
+            self.stats.shooters_left -= 1
+
+            # Get rid of any remaining balls and bullets.
+            self.balls.empty()
+            self.ball2s.empty()
+            self.bullets.empty()
+            self.bulletbs.empty()
+            self.lines.empty()
+
+            # Create a new fleet
+            self.shooter3()
+            self._create_fleet()
+            self._create_fleet2()
+
+            # Pause.
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
+                
     def _create_fleet(self):
         """Create the fleet of balls."""
         # Create a ball and find the number of balls in one row.
@@ -160,10 +223,17 @@ class SidewaysShooter:
                 ball2.rect.x =  19 * ball_width2 + (2 * ball_width2 * row_number2)
                 self.ball2s.add(ball2)
 
+    def _fire_line(self):
+        """Create a new line and add it to the lines group."""
+        for i in range(1):
+            new_line = Line(self)
+            self.lines.add(new_line)
+
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
         self.shooter.blitme()
+        #self._fire_line()
         
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
@@ -172,6 +242,12 @@ class SidewaysShooter:
         for bulletb in self.bulletbs.sprites():
             bulletb.draw_bulletb()
 
+        for line in self.lines.sprites():
+            #self._fire_line()
+            line.draw_line()
+            
+            
+        #self.lines.draw(self.screen)
         self.balls.draw(self.screen)
         self.ball2s.draw(self.screen)
             
