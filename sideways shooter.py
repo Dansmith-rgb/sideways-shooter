@@ -6,13 +6,15 @@ import pygame
 from settings import Settings
 from game_stats import GameStats
 from line import Line
+from play_button import PlayButton
+from settings_button import SettingsButton, SettingsMenu
 from shooter import Shooter
 from bullet import Bullet
 from bulletb import Bulletb
 from ball import Ball
 from ball2 import Ball2
 
-
+#flag = False
 class SidewaysShooter:
 
     def __init__(self):
@@ -33,6 +35,15 @@ class SidewaysShooter:
 
         self._create_fleet()
         self._create_fleet2()
+
+        # Make the play button.
+        self.play_button = PlayButton(self, "Right wheel to play")
+
+        # Make the Settings button.
+        self.settings_button = SettingsButton(self, "Settings")
+
+        # Make the setttings menu
+        self.settings_menu = SettingsMenu(self, "fast or slow press y or n")
         
     def run_game(self):
         """Start the main game loop."""
@@ -43,10 +54,12 @@ class SidewaysShooter:
                 self.shooter.update()
                 self._update_bullets()
                 self._update_shooter()
+            
             self._update_screen()
 
     def _check_events(self):
         LEFT = 1
+        MIDDLE = 2
         RIGHT = 3
         """Respond to keypresses and mouse events."""
         for event in pygame.event.get():
@@ -59,11 +72,56 @@ class SidewaysShooter:
                 self._check_keyup_events(event)
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
+                #mouse_pos2 = pygame.mouse.get_pos()
+                #self._check_play_button(mouse_pos2)
+                #None
                 self._fire_bullet()
+
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == MIDDLE:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
+                #self._check_settings_button(mouse_pos)
+
+            #elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos2 = pygame.mouse.get_pos()
+                self.settings_button.flag = True
+                #self._check_settings_button(mouse_pos2)
                 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == RIGHT:
+                #mouse_pos = pygame.mouse.get_pos()
+                #self._check_play_button(mouse_pos) 
                 self._fire_bulletb()
                 
+    def _check_play_button(self, mouse_pos):
+        """Start a new game when the player clicks Play."""
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.stats.game_active:
+            # Reset the game statistics.
+            self.stats.reset_stats()
+            self.stats.game_active = True
+
+            # Get rid of any remaining balss and aliens
+            self.balls.empty()
+            self.ball2s.empty()
+            self.bullets.empty()
+            self.bulletbs.empty()
+            self.lines.empty()
+            self.shooter3()
+
+            # Create a new fleet.
+            self._create_fleet()
+            self._create_fleet2()
+
+            # Hide the mouse cursor.
+            pygame.mouse.set_visible(False)
+#flag = False
+    def _check_settings_button(self, mouse_pos2):
+        """load the settings when the player clicks settings"""
+        if self.settings_button.rect.collidepoint(mouse_pos2):
+            #self.settings_button.flag = True
+            #self.settings_menu.check_image()
+            self.settings_menu.draw_button()
+                        
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
         if event.key == pygame.K_x:
@@ -72,6 +130,13 @@ class SidewaysShooter:
             self.shooter.moving_left = True
         elif event.key == pygame.K_SPACE:
             self._fire_line()
+        elif event.key == pygame.K_RIGHT:
+            self.settings_button.flag = True
+            self.settings_menu.draw_button()
+        elif event.key == pygame.K_y:
+            self.settings.shooter_speed2 = 0.09
+        elif event.key == pygame.K_n:
+            self.settings.shooter_speed2 = 0.01
         elif event.key == pygame.K_p:
             self.balls.empty()
             self.ball2s.empty()
@@ -170,6 +235,7 @@ class SidewaysShooter:
             sleep(0.5)
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
                 
     def _create_fleet(self):
         """Create the fleet of balls."""
@@ -231,6 +297,10 @@ class SidewaysShooter:
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
+         # Draw the play button if the game is inactive.
+        #if not self.stats.game_active:
+            #self.play_button.draw_button()
+            
         self.screen.fill(self.settings.bg_color)
         self.shooter.blitme()
         #self._fire_line()
@@ -247,9 +317,20 @@ class SidewaysShooter:
             line.draw_line()
             
             
-        #self.lines.draw(self.screen)
         self.balls.draw(self.screen)
         self.ball2s.draw(self.screen)
+
+        # Draw the play button if the game is inactive.
+        if not self.stats.game_active:
+            self.play_button.draw_button()
+
+        # Draw the settings if the game is inactive.
+        if not self.stats.game_active:
+            self.settings_button.draw_button()
+
+        if self.settings_button.flag == True and not self.stats.game_active:
+            #self.settings_menu.check_image()
+            self.settings_menu.draw_button()
             
         pygame.display.flip()
 
