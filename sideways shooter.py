@@ -15,6 +15,7 @@ from ball import Ball
 from ball2 import Ball2
 
 #flag = False
+pause = False
 class SidewaysShooter:
 
     def __init__(self):
@@ -47,6 +48,8 @@ class SidewaysShooter:
         
     def run_game(self):
         """Start the main game loop."""
+        Running, Pause = 0, 1
+        state = Running
         while True:
             self._check_events()
             if self.stats.game_active:
@@ -54,7 +57,8 @@ class SidewaysShooter:
                 self.shooter.update()
                 self._update_bullets()
                 self._update_shooter()
-            
+
+                        
             self._update_screen()
 
     def _check_events(self):
@@ -80,6 +84,8 @@ class SidewaysShooter:
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == MIDDLE:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
+                #pause
+                
                 #self._check_settings_button(mouse_pos)
 
             #elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -95,6 +101,7 @@ class SidewaysShooter:
     def _check_play_button(self, mouse_pos):
         """Start a new game when the player clicks Play."""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        
         if button_clicked and not self.stats.game_active:
             # Reset the game statistics.
             self.stats.reset_stats()
@@ -114,13 +121,17 @@ class SidewaysShooter:
 
             # Hide the mouse cursor.
             pygame.mouse.set_visible(False)
-#flag = False
+        
+
     def _check_settings_button(self, mouse_pos2):
         """load the settings when the player clicks settings"""
         if self.settings_button.rect.collidepoint(mouse_pos2):
             #self.settings_button.flag = True
             #self.settings_menu.check_image()
             self.settings_menu.draw_button()
+
+    
+        
                         
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
@@ -132,12 +143,19 @@ class SidewaysShooter:
             self._fire_line()
         elif event.key == pygame.K_RIGHT:
             self.settings_button.flag = True
+        elif event.key == pygame.K_LEFT:
+            self.settings_button.flag = False
             self.settings_menu.draw_button()
+            pygame.mouse.set_visible(True)
         elif event.key == pygame.K_y:
             self.settings.shooter_speed2 = 0.09
         elif event.key == pygame.K_n:
             self.settings.shooter_speed2 = 0.01
         elif event.key == pygame.K_p:
+            self.stats.game_active = False
+            pygame.mouse.set_visible(True)
+            self.settings_button.flag = False
+            #self.settings_button()
             self.balls.empty()
             self.ball2s.empty()
             self.bullets.empty()
