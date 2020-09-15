@@ -7,7 +7,7 @@ from settings import Settings
 from game_stats import GameStats
 from line import Line
 from play_button import PlayButton
-from settings_button import SettingsButton, SettingsMenu
+from settings_button import SettingsButton, SettingsMenu, SpeedButton, SpeedButton2
 from shooter import Shooter
 from bullet import Bullet
 from bulletb import Bulletb
@@ -43,8 +43,14 @@ class SidewaysShooter:
         # Make the Settings button.
         self.settings_button = SettingsButton(self, "Settings")
 
-        # Make the setttings menu
+        # Make the setttings menu.
         self.settings_menu = SettingsMenu(self, "fast or slow press y or n")
+
+        # Make the speed button.
+        self.speed_button = SpeedButton(self, "you have selected the fast option")
+
+        # Make the second speed button.
+        self.speed_button2 = SpeedButton2(self, "You have selected the slower options")
         
     def run_game(self):
         """Start the main game loop."""
@@ -144,13 +150,22 @@ class SidewaysShooter:
             self._fire_line()
         elif event.key == pygame.K_RIGHT:
             self.settings_button.flag = True
+            #self.speed_button.draw_button()
         elif event.key == pygame.K_LEFT:
             self.settings_button.flag = False
             self.settings_menu.draw_button()
             pygame.mouse.set_visible(True)
         elif event.key == pygame.K_y:
+            self.speed_button.flag2 = True
+            while self.speed_button.flag2 == True:
+                self.speed_button2.flag3 = False
+                break
             self.settings.shooter_speed2 = 0.09
         elif event.key == pygame.K_n:
+            self.speed_button2.flag3 = True
+            while self.speed_button2.flag3 == True:
+                self.speed_button.flag2 = False
+                break
             self.settings.shooter_speed2 = 0.01
         elif event.key == pygame.K_p:
             self.stats.game_active = False
@@ -354,6 +369,21 @@ class SidewaysShooter:
         if self.settings_button.flag == True and not self.stats.game_active:
             #self.settings_menu.check_image()
             self.settings_menu.draw_button()
+
+        if self.speed_button.flag2 == True and not self.stats.game_active:
+            self.speed_button2.flag3 = False
+            self.speed_button.draw_button3()
+            
+            
+
+        if self.speed_button2.flag3 == True and not self.stats.game_active:
+            self.speed_button.flag2 = False
+            self.speed_button2.draw_button4()
+            
+            
+
+        #self.speed_button2.flag3 = False
+        #self.speed_button.flag2 = False
             
         pygame.display.flip()
 
