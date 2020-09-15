@@ -172,11 +172,8 @@ class SidewaysShooter:
         self.shooter = Shooter(self)
 
     def check_if_empty(self):
-        if len(self.balls) == 0:q
+        if len(self.balls) == 0:
             pass
-            #print("Hello")
-            #self.create_fleet()
-            #self.create_fleet2()
 
     def _check_keyup_events(self, event):
         """Respond to key releases."""
