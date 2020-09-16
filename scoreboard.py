@@ -1,10 +1,13 @@
 import pygame.font
+from pygame.sprite import Group
+from shooter import Shooter
 
 class Scoreboard:
     """A class to report scoring information."""
 
     def __init__(self, ss_game):
         """Initialize scorekeeping attributes."""
+        self.ss_game = ss_game
         self.screen = ss_game.screen
         self.screen_rect = self.screen.get_rect()
         self.settings = ss_game.settings
@@ -17,6 +20,7 @@ class Scoreboard:
         # Prepare the initial score images.
         self.prep_score()
         self.prep_high_score()
+        self.prep_shooters()
 
     def prep_score(self):
         """Turn the score into a rendered image."""
@@ -40,6 +44,14 @@ class Scoreboard:
         self.high_score_rect.centerx = self.screen_rect.centerx
         self.high_score_rect.top = self.score_rect.top
 
+    def prep_shooters(self):
+        """Show how many shooters are left."""
+        self.shooters = Group()
+        for shooter_number in range(self.stats.shooters_left):
+            shooter = Shooter(self.ss_game)
+            shooter.rect.x = 10 + shooter_number * shooter.rect.width
+            shooter.rect.y = 100
+            self.shooters.add(shooter)
     
 
     def check_high_score(self):
@@ -49,10 +61,11 @@ class Scoreboard:
             self.prep_high_score()
 
     def show_score(self):
-        """Draw scores and level to the screen."""
+        """Draw scores and shooters to the screen."""
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
-        
+        self.shooters.draw(self.screen)
+      
 
 
 

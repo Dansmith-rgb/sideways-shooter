@@ -117,6 +117,7 @@ class SidewaysShooter:
             self.stats.reset_stats()
             self.stats.game_active = True
             self.sb.prep_score()
+            self.sb.prep_shooters()
 
             # Get rid of any remaining balss and aliens
             self.balls.empty()
@@ -273,7 +274,9 @@ class SidewaysShooter:
     def _shooter_hit(self):
         """Respond to the shooter being hit."""
         if self.stats.shooters_left > 0:
+            # Decrement ships_left, and update scoreboard.
             self.stats.shooters_left -= 1
+            self.sb.prep_shooters()
 
             # Get rid of any remaining balls and bullets.
             self.balls.empty()
