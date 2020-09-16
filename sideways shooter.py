@@ -184,13 +184,14 @@ class SidewaysShooter:
             self._create_fleet()
             self._create_fleet2()
         elif event.key == pygame.K_q:
+            pygame.mouse.set_visible(True)
             sys.exit()
 
     def shooter3(self):
         self.shooter = Shooter(self)
 
     def check_if_empty(self):
-        if len(self.balls) == 0:
+        if len(self.balls) == 0 and len(self.ball2s) == 0:
             pass
 
     def _check_keyup_events(self, event):
@@ -247,11 +248,13 @@ class SidewaysShooter:
             for balls in collisions.values():
                 self.stats.score += self.settings.ball_points * len(balls)
             self.sb.prep_score()
+            self.sb.check_high_score()
             
         if collisions2:
             for ball2s in collisions2.values():
                 self.stats.score += self.settings.ball_points2 * len(ball2s)
             self.sb.prep_score()
+            self.sb.check_high_score()
             
     def _update_shooter(self):
         """Update the position of the shooter."""
