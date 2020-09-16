@@ -66,6 +66,7 @@ class SidewaysShooter:
                 self._update_bullets()
                 self._update_shooter()
                 self.check_if_empty()
+                
 
                         
             self._update_screen()
@@ -255,6 +256,7 @@ class SidewaysShooter:
                 self.stats.score += self.settings.ball_points2 * len(ball2s)
             self.sb.prep_score()
             self.sb.check_high_score()
+
             
     def _update_shooter(self):
         """Update the position of the shooter."""

@@ -16,4 +16,5 @@ class GameStats:
         "Initialzie statistics that can change during the game."""
         self.shooters_left = self.settings.shooter_limit
         self.score = 0
+        
     
