@@ -115,6 +115,7 @@ class SidewaysShooter:
             # Reset the game statistics.
             self.stats.reset_stats()
             self.stats.game_active = True
+            self.sb.prep_score()
 
             # Get rid of any remaining balss and aliens
             self.balls.empty()
@@ -235,12 +236,22 @@ class SidewaysShooter:
         # Check for any bullets that have hit any balls
         #  If so, get rid of the bullets and the ball
         collisions = pygame.sprite.groupcollide(self.bullets, self.balls, True, True)
-        colllision2 = pygame.sprite.groupcollide(self.bulletbs, self.ball2s, True, True)
+        collisions2 = pygame.sprite.groupcollide(self.bulletbs, self.ball2s, True, True)
         collisions3 = pygame.sprite.groupcollide(self.lines, self.balls, True, True)
         collisions4 = pygame.sprite.groupcollide(self.lines, self.ball2s, True, True)
 
         if collisions3 or collisions4 == True:
             self._shooter_hit()
+
+        if collisions:
+            for balls in collisions.values():
+                self.stats.score += self.settings.ball_points * len(balls)
+            self.sb.prep_score()
+            
+        if collisions2:
+            for ball2s in collisions2.values():
+                self.stats.score += self.settings.ball_points2 * len(ball2s)
+            self.sb.prep_score()
             
     def _update_shooter(self):
         """Update the position of the shooter."""

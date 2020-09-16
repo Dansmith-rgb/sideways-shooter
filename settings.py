@@ -35,5 +35,14 @@ class Settings:
         self.line_height = 800
         self.line_color = (255, 0, 0)
 
+        self.initialize_dynamic_settings()
+
+    def initialize_dynamic_settings(self):
+        """Initializing dynamic settings for Sideways Shooter."""
+
+        # Scoring
+        self.ball_points = 50
+        self.ball_points2 = 50
+
         
  
